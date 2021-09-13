@@ -8,23 +8,22 @@
 // @icon         https://www.google.com/s2/favicons?domain=vndirect.com.vn
 // @grant        none
 // @require      http://code.jquery.com/jquery-latest.js
+// @require      https://code.jquery.com/ui/1.13.0-rc.2/jquery-ui.min.js
 // ==/UserScript==
 
 $(document).ready(function() {
+    setInterval(updateinfo, 5000);
 
     $('ul.footer-quick-nav').click(function(){
         var delayInMilliseconds = 300; //1 second
         setTimeout(function() {
             updateinterface();
             updateinfo();
-
         }, delayInMilliseconds);
       });
-
 });
 
 function updateinterface(){
-
     $('div.right-frame').css({
         'width':'420px',
         'height':'fit-content',
@@ -34,10 +33,13 @@ function updateinterface(){
         '-moz-border-radius': '10px',
         'border-radius': '10px'});
     $('table.category-list thead').find('th').eq(4).after('<th class="tc">Lãi/lỗ</th>');
+    $('.right-frame').draggable();
+    $('.right-frame').resizable();
 };
 
 function updateinfo(){
-            $('table.category-list tbody').find('tr').each(function(){
+    $('.loinhuanvnd').remove();
+    $('table.category-list tbody').find('tr').each(function(){
                 var slcp = $(this).find('td').eq(2).html();
                 var price = $(this).find('td').eq(3).html();
                 var percent = $(this).find('td').eq(4).find('span').html();
@@ -46,9 +48,6 @@ function updateinfo(){
                 percent = percent.replace(/\<.*?\>/g,'');
                 percent = percent.replace('%','');
                 percent = parseFloat(percent);
-                console.log(slcp);
-                console.log(price);
-                console.log(percent);
                 var profit = slcp*price*percent/100;
 
                 var color = '';
@@ -59,7 +58,6 @@ function updateinfo(){
                 }else{
                     color = 'txt-lime';
                 };
-                $(this).find('td').eq(4).after('<td class="tr"><span class="'+color+'">' + new Intl.NumberFormat().format(profit) + '</span></td>');
-
-            });
+                $(this).find('td').eq(4).after('<td class="tr loinhuanvnd"><span class="'+color+'">' + new Intl.NumberFormat().format(profit) + '</span></td>');
+     });
 };
