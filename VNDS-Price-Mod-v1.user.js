@@ -13,7 +13,7 @@
 
 $(document).ready(function() {
     $("<style type='text/css'> .highlight_quy{ background-color:#ffd900; } </style>").appendTo("head");
-    setInterval(updateinfo, 5000);
+    setInterval(updateinfo, 500);
 
     $('ul.footer-quick-nav').click(function(){
         var delayInMilliseconds = 200; //1 second
@@ -22,35 +22,50 @@ $(document).ready(function() {
             updateinfo();
         }, delayInMilliseconds);
       });
+
+
+
 });
 
 function updateinterface(){
     $('div.right-frame').css({
-        'width':'420px',
+        'width':'480px',
         'height':'fit-content',
         'opacity':'0.95',
         'box-shadow': 'rgba(0, 0, 0, 0.19) 0px 10px 20px, rgba(0, 0, 0, 0.23) 0px 6px 6px',
         '-webkit-border-radius': '10px',
         '-moz-border-radius': '10px',
         'border-radius': '10px'});
-    $('table.category-list thead').find('th').eq(4).after('<th class="tc">Lãi/lỗ</th>');
-    $('.right-frame').draggable();
+    $('table.category-list thead').find('th').eq(4).after('<th class="tc">Gồng lãi</th>');
+    $('table.category-list thead').find('th').eq(4).after('<th class="tc">% ngày</th>');
+    //$('.right-frame').draggable();
 };
 
 function updateinfo(){
-    var change = false;
     $('.loinhuanvnd').remove();
+
     $('table.category-list tbody').find('tr').each(function(){
+        var stock = $(this).find('td').eq(0).html();
         var slcp = $(this).find('td').eq(2).html();
         var price = $(this).find('td').eq(3).html();
         var percent = $(this).find('td').eq(4).find('span').html();
+
+        var live_price = $('#banggia-khop-lenh-body').find('span#'+stock+'matchP').html();
+        live_price = parseFloat(live_price.replace('.',''))*10;
+
+        var live_percent = $('#banggia-khop-lenh-body').find('span#'+stock+'percent').html();
+        var live_percent_class = $('#banggia-khop-lenh-body').find('span#'+stock+'percent').attr('class')
+
+        var live_change = $('#banggia-khop-lenh-body').find('span#'+stock+'change').html();
+
+
         slcp = parseFloat(slcp.replace(',',''));
         price = parseFloat(price.replace(',',''));
         percent = percent.replace(/\<.*?\>/g,'');
         percent = percent.replace('%','');
         percent = parseFloat(percent);
 
-        var profit = slcp*price*percent/100;
+        var profit = parseFloat(slcp*(live_price-price)).toFixed(0);
 
         var color = '';
         if(profit<0) {
@@ -60,10 +75,9 @@ function updateinfo(){
         }else{
             color = 'txt-lime';
         };
-        $(this).find('td').eq(4).after('<td class="tr loinhuanvnd"><span class="'+color+'">' + new Intl.NumberFormat().format(profit) + '</span></td>');
+        $(this).find('td').eq(4).after('<td class="tr loinhuanvnd"><span class="'+color+'">' + new Intl.NumberFormat().format(profit) + 'đ</span></td>');
+        $(this).find('td').eq(4).after('<td class="tr loinhuanvnd"><span class="'+live_percent_class+'">'+live_percent+' ('+live_change+')</span></td>');
+
     });
-    $('.loinhuanvnd').addClass('highlight_quy');
-    setTimeout(function(){
-        $('.loinhuanvnd').removeClass('highlight_quy');
-    },800);
+    $
 };
