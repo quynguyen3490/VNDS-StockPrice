@@ -11,6 +11,8 @@
 // @require      https://code.jquery.com/ui/1.13.0-rc.2/jquery-ui.min.js
 // ==/UserScript==
 
+var title = '';
+
 $(document).ready(function() {
     $("<style type='text/css'> .highlight_quy{ background-color:#ffd900; } </style>").appendTo("head");
     setInterval(updateinfo, 500);
@@ -20,6 +22,12 @@ $(document).ready(function() {
         setTimeout(function() {
             updateinterface();
             updateinfo();
+            $('#toggle_kl').change(function(){
+                if($(this).prop('checked',true)) showhidekl();
+
+
+            }
+            );
         }, delayInMilliseconds);
       });
 
@@ -27,7 +35,14 @@ $(document).ready(function() {
 
 });
 
+function showhidekl(){
+    $('table.category-list thead tr th:nth-child(n+2):nth-child(-n+4').toggle();
+    $('table.category-list tbody tr td:nth-child(n+2):nth-child(-n+4').toggle();
+    $('table.category-list tfoot td').attr('colspan',2);
+}
+
 function updateinterface(){
+    $('span.title').append(' <input type="checkbox" id="toggle_kl"> Ẩn KL/Giá vốn</input> ');
     $('div.right-frame').css({
         'width':'480px',
         'height':'fit-content',
@@ -42,6 +57,9 @@ function updateinterface(){
 };
 
 function updateinfo(){
+
+    title = '';
+
     $('.loinhuanvnd').remove();
 
     $('table.category-list tbody').find('tr').each(function(){
@@ -77,6 +95,9 @@ function updateinfo(){
         };
         $(this).find('td').eq(4).after('<td class="tr loinhuanvnd"><span class="'+color+'">' + new Intl.NumberFormat().format(profit) + 'đ</span></td>');
         $(this).find('td').eq(4).after('<td class="tr loinhuanvnd"><span class="'+live_percent_class+'">'+live_percent+' ('+live_change+')</span></td>');
+
+        title = title + stock + ' ' + $('#banggia-khop-lenh-body').find('span#'+stock+'matchP').html() + ' | ';
+        $('title').html(title);
 
     });
     $
