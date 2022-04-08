@@ -15,7 +15,9 @@ var title = '';
 
 $(document).ready(function() {
     $("<style type='text/css'> .highlight_quy{ background-color:#ffd900; } </style>").appendTo("head");
+    updateinterface();
     setInterval(updateinfo, 500);
+
 
     $('ul.footer-quick-nav').click(function(){
         var delayInMilliseconds = 200; //1 second
@@ -44,7 +46,7 @@ function showhidekl(){
 function updateinterface(){
     $('span.title').append(' <input type="checkbox" id="toggle_kl"> Ẩn KL/Giá vốn</input> ');
     $('div.right-frame').css({
-        'width':'480px',
+        'width':'600px',
         'height':'fit-content',
         'opacity':'0.95',
         'box-shadow': 'rgba(0, 0, 0, 0.19) 0px 10px 20px, rgba(0, 0, 0, 0.23) 0px 6px 6px',
@@ -94,7 +96,7 @@ function updateinfo(){
             color = 'txt-lime';
         };
         $(this).find('td').eq(4).after('<td class="tr loinhuanvnd"><span class="'+color+'">' + new Intl.NumberFormat().format(profit) + 'đ</span></td>');
-        $(this).find('td').eq(4).after('<td class="tr loinhuanvnd"><span class="'+live_percent_class+'">'+live_percent+' ('+live_change+')</span></td>');
+        $(this).find('td').eq(4).after('<td class="tr loinhuanvnd"><span class="'+live_percent_class+'">'+new Intl.NumberFormat().format(live_price)+' '+live_percent+' ('+live_change+')</span></td>');
 
         title = title + stock + ' ' + $('#banggia-khop-lenh-body').find('span#'+stock+'matchP').html() + ' | ';
         $('title').html(title);
